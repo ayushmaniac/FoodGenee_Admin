@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.admin.foodgenee.forgotpassword.ui.ForgotPassword;
 import com.admin.foodgenee.loginmodel.LoginModel;
 
 import network.FoodGenee;
@@ -21,10 +23,13 @@ import session.SessionManager;
 
 public class Login extends AppCompatActivity {
 
-    EditText usernmame,password;
+    EditText usernmame, password;
     Button loginHere;
     ProgressBar progressBar;
     SessionManager sessionManager;
+    TextView forgotPassword;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +41,14 @@ public class Login extends AppCompatActivity {
         progressBar = findViewById(R.id.loginProgress);
         sessionManager = new SessionManager(this);
         progressBar.setVisibility(View.GONE);
+        forgotPassword = findViewById(R.id.forgotPassword);
+
+        forgotPassword.setOnClickListener(v -> {
+
+            Intent intent = new Intent(Login.this, ForgotPassword.class);
+            startActivity(intent);
+
+        });
 
         loginHere.setOnClickListener(view -> {
             progressBar.setVisibility(View.VISIBLE);
@@ -45,10 +58,18 @@ public class Login extends AppCompatActivity {
 
         if(sessionManager.isLoggin()){
 
-            Intent intent = new Intent(Login.this, WebViewSite.class);
+            Intent intent = new Intent(Login.this, Root.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+
+            checkLoginStatus();
         }
+    }
+
+    private void checkLoginStatus() {
+
+
+
     }
 
     private void giveLoginCall() {
@@ -68,7 +89,7 @@ public class Login extends AppCompatActivity {
 
                         progressBar.setVisibility(View.GONE);
                         sessionManager.createSession(response.body().getUsersid(), response.body().getText());
-                        Intent intent = new Intent(Login.this, WebViewSite.class);
+                        Intent intent = new Intent(Login.this, Root.class);
                         intent.putExtra("url", response.body().getText());
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
@@ -78,16 +99,21 @@ public class Login extends AppCompatActivity {
 
 
                         progressBar.setVisibility(View.GONE);
+                        Toast.makeText(Login.this, response.body().getText(), Toast.LENGTH_SHORT).show();
 
                     }
                     else {
 
                         progressBar.setVisibility(View.GONE);
+                        Toast.makeText(Login.this, response.body().getText(), Toast.LENGTH_SHORT).show();
+
 
                     }
                 }
                 catch (Exception e){
                     progressBar.setVisibility(View.GONE);
+                    Toast.makeText(Login.this, "Some error occured", Toast.LENGTH_SHORT).show();
+
 
                 }
             }

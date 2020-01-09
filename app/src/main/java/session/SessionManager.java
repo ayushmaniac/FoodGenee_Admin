@@ -19,6 +19,8 @@ public class SessionManager {
     private static final String LOGIN = "IS_LOGIN";
     public static final String USER_ID = "USER_ID";
     public static final String WEB = "WEB_URL";
+    private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
+
 
     private static final String SHARED_PREF_NAME = "my_shared_preff";
 
@@ -69,6 +71,15 @@ public class SessionManager {
         Intent i = new Intent(context, Login.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
+    }
+
+    public void setFirstTimeLaunch(boolean isFirstTime) {
+        editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
+        editor.commit();
+    }
+
+    public boolean isFirstTimeLaunch() {
+        return sharedPreferences.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
 }

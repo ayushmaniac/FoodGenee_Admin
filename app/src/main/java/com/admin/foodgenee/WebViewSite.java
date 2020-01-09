@@ -188,9 +188,9 @@ public class WebViewSite extends AppCompatActivity  {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()){
 
-                case R.id.logoutButtonNew:
-                    sessionManager.logout();
-                    return true;
+//                case R.id.logoutButtonNew:
+//                    sessionManager.logout();
+//                    return true;
             }
         return true;
 

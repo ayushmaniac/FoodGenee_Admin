@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:id="@+id/orderCard"
+        android:layout_centerHorizontal="true"
+        android:elevation="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/newOrderUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:textColor="@color/colorAccent"
+                android:layout_marginLeft="20dp"
+                android:text="Ayush Shrivastava"/>
+
+
+            <TextView
+                android:id="@+id/newOrderId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ID: ABCDEFGHJ"
+                android:textStyle="italic"
+                android:layout_marginLeft="20dp"
+                android:layout_below="@id/newOrderUserName"/>
+
+
+            <TextView
+                android:id="@+id/newOrderAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/newOrderId"
+                android:layout_marginLeft="20dp"
+                android:text="Order Amount Total : Rs 500"/>
+
+
+
+            <TextView
+                android:id="@+id/newOrderDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/newOrderAmount"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:text="29 December 2019 - 15:12"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:textStyle="bold"
+                android:id="@+id/newOrderRandomText"
+                android:layout_marginLeft="20dp"
+                android:textSize="30dp"
+                android:layout_below="@id/newOrderDate"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TB1"
+                android:textStyle="bold"
+                android:id="@+id/newOrderTableNo"
+                android:layout_marginLeft="20dp"
+                android:textSize="30dp"
+                android:layout_below="@id/newOrderRandomText"/>
+
+
+            <TextView
+                android:id="@+id/newOrderPaidStatusText"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_margin="20dp"
+                android:text="Paid Status"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:layout_below="@id/newOrderTableNo"/>
+
+
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".forgotpassword.ui.VerifyOtp">
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/layone"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+        <ImageView
+            android:id="@+id/logo"
+            android:visibility="visible"
+            android:layout_width="180dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/logonew"/>
+        <TextView
+            android:layout_below="@id/logo"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:layout_height="match_parent"
+            android:text="Please enter the One Time Verification to proceed."/>
+
+
+    </RelativeLayout>
+
+
+
+  <LinearLayout
+      android:id="@+id/pinlayouts"
+      android:layout_width="wrap_content"
+      android:layout_marginTop="10dp"
+      android:layout_height="55dp"
+      android:layout_centerHorizontal="true"
+      android:layout_below="@id/layone"
+      android:orientation="horizontal">
+
+      <EditText
+          android:id="@+id/et1"
+          android:textAlignment="center"
+          android:layout_gravity="center"
+          android:layout_width="50dp"
+          android:backgroundTint="@color/colorAccent"
+
+          android:inputType="phone"
+          android:layout_marginLeft="10dp"
+          android:layout_height="wrap_content"/>
+
+      <EditText
+          android:id="@+id/et2"
+          android:textAlignment="center"
+          android:layout_gravity="center"
+          android:layout_width="50dp"
+          android:inputType="phone"
+          android:backgroundTint="@color/colorAccent"
+          android:layout_marginLeft="10dp"
+          android:maxLength="1"
+          android:layout_height="wrap_content"/>
+
+      <EditText
+          android:id="@+id/et3"
+          android:textAlignment="center"
+          android:layout_gravity="center"
+          android:layout_width="50dp"
+          android:maxLength="1"
+          android:inputType="phone"
+          android:backgroundTint="@color/colorAccent"
+          android:layout_marginLeft="10dp"
+          android:layout_height="wrap_content"/>
+
+      <EditText
+          android:id="@+id/et4"
+          android:textAlignment="center"
+          android:layout_gravity="center"
+          android:layout_width="50dp"
+          android:layout_marginLeft="10dp"
+          android:inputType="phone"
+          android:maxLength="1"
+          android:backgroundTint="@color/colorAccent"
+          android:layout_height="wrap_content"/>
+
+
+
+
+  </LinearLayout>
+
+
+
+    <Button
+        android:id="@+id/verifyOtpForgotButton"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/white"
+        android:background="@color/colorAccent"
+        android:text="Proceed"
+        android:layout_below="@id/pinlayouts"/>
+
+</RelativeLayout>

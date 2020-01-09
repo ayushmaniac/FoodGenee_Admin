@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".orderdetails.ui.OrderDetails">
+
+    <RelativeLayout
+        android:id="@+id/orderDetailImage"
+        android:layout_width="match_parent"
+        android:background="@color/colorAccent"
+        android:layout_height="180dp">
+
+
+        <ImageButton
+            android:id="@+id/goBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back_black_24dp"/>
+
+        <TextView
+            android:id="@+id/orderStoreName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_centerInParent="true"
+            />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:id="@+id/orderId"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/orderStoreName"
+          />
+
+    </RelativeLayout>
+
+
+
+    <TextView
+        android:id="@+id/orderSummarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/orderDetailImage"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:text="Order Summary"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/detailOrderRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/orderSummarText"
+        android:padding="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_below="@id/detailOrderRecycler"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:text="Total"/>
+
+
+    <TextView
+        android:id="@+id/totalAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:text="1"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:padding="10dp"
+        android:layout_below="@id/detailOrderRecycler"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:layout_height="wrap_content"
+        android:id="@+id/detailProgress"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>
+
+
+
+</ScrollView>
