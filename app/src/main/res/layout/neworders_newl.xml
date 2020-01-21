@@ -3,24 +3,148 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:elevation="10dp"
-    android:layout_margin="10dp"
+    android:elevation="@dimen/_6sdp"
+    android:layout_margin="@dimen/_6sdp"
     android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/orderDateNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date: 25-Dec-2019"
+            android:textStyle="bold"
+            android:layout_marginRight="@dimen/_6sdp"
+            android:gravity="right|center"
+            android:layout_marginTop="@dimen/_6sdp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:layout_marginRight="@dimen/_6sdp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tableNumberNew"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_12sdp"
+                android:text="Table No: TB1"/>
+            <TextView
+                android:id="@+id/orderIdNew"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center"
+                android:layout_height="wrap_content"
+                android:text="Order ID: 220"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:layout_marginRight="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/itemsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tableNumberNew"
+                android:text="Items:"
+                android:textColor="@color/colorAccent"
+               android:textSize="@dimen/_10sdp"/>
 
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/productsRecycler"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:layout_marginRight="@dimen/_6sdp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/orderIdValue"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Order Value: 220"
+                android:textSize="@dimen/_12sdp"
+                android:textStyle="bold"
+
+             />
+
+            <TextView
+                android:id="@+id/orderPaymentStatus"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center"
+                android:layout_height="wrap_content"
+                android:text="Payment : COD"
+                android:textStyle="bold"
+                android:textSize="@dimen/_12sdp"
+               />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:layout_marginRight="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginBottom="@dimen/_6sdp"
+            android:weightSum="2">
+            <Button
+                android:id="@+id/acceptOrderNew"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="@dimen/_35sdp"
+                android:text="Accept"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:textColor="@android:color/white"
+                android:background="@color/colorAccent"
+                android:layout_below="@id/productsRecycler"
+               />
+
+
+            <Button
+                android:id="@+id/rejectOrderNew"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="@dimen/_35sdp"
+                android:text="Reject"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_toRightOf="@+id/acceptOrderNew"
+                android:textColor="@android:color/white"
+                android:background="@android:color/holo_red_light"
+                android:layout_below="@id/productsRecycler"
+               />
+        </LinearLayout>
+    </LinearLayout>
  <RelativeLayout
      android:layout_width="match_parent"
      android:layout_height="match_parent">
 
-     <TextView
-         android:id="@+id/tableNumberNew"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginLeft="10dp"
-         android:layout_marginTop="20dp"
-         android:textStyle="bold"
-         android:textColor="@color/colorPrimary"
-         android:textSize="23dp"
-         android:text="Table No: TB1"/>
+
 
 
      <RelativeLayout
@@ -30,87 +154,18 @@
          android:gravity="end"
          android:layout_alignParentEnd="true">
 
-         <TextView
-             android:id="@+id/orderDateNew"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:text="Date: 25-Dec-2019"
-             android:textStyle="bold"
-             android:layout_marginTop="20dp"/>
-         <TextView
-             android:id="@+id/orderIdNew"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:text="Order ID: 220"
-             android:textSize="20dp"
-             android:layout_marginTop="10dp"
-             android:textColor="@color/colorPrimary"
-             android:textStyle="bold"
-             android:layout_below="@id/orderDateNew"/>
 
-         <TextView
-             android:id="@+id/orderIdValue"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:text="Order Value: 220"
-             android:textSize="15dp"
-             android:layout_marginTop="10dp"
-             android:textStyle="bold"
-             android:layout_below="@id/orderIdNew"/>
 
-         <TextView
-             android:id="@+id/orderPaymentStatus"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:text="Payment : COD"
-             android:textSize="15dp"
-             android:layout_marginTop="10dp"
-             android:textStyle="bold"
-             android:layout_below="@id/orderIdValue"/>
+
+
      </RelativeLayout>
 
 
 
-     <TextView
-         android:id="@+id/itemsText"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_below="@id/tableNumberNew"
-         android:text="Items:"
-         android:layout_marginLeft="10dp"
-         android:textColor="@color/colorAccent"
-         android:textStyle="bold"/>
 
 
-     <androidx.recyclerview.widget.RecyclerView
-         android:id="@+id/productsRecycler"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_below="@id/itemsText"
-         android:layout_margin="10dp"/>
 
 
-     <Button
-         android:id="@+id/acceptOrderNew"
-         android:layout_width="wrap_content"
-         android:layout_height="40dp"
-         android:text="Accept"
-         android:textColor="@android:color/white"
-         android:background="@color/colorAccent"
-         android:layout_below="@id/productsRecycler"
-         android:layout_margin="10dp"/>
-
-
-     <Button
-         android:id="@+id/rejectOrderNew"
-         android:layout_width="wrap_content"
-         android:layout_height="40dp"
-         android:text="Reject"
-         android:layout_toRightOf="@+id/acceptOrderNew"
-         android:textColor="@android:color/white"
-         android:background="@android:color/holo_red_light"
-         android:layout_below="@id/productsRecycler"
-         android:layout_margin="10dp"/>
 
 
  </RelativeLayout>

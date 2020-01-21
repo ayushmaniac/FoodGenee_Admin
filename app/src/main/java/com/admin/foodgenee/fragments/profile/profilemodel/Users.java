@@ -17,9 +17,22 @@ public class Users {
     @SerializedName("mobile")
     @Expose
     private String mobile;
+
     @SerializedName("profilepic")
     @Expose
     private String profilepic;
+
+    @SerializedName("storename")
+    @Expose
+    private String storename;
+
+    public String getStorename() {
+        return storename;
+    }
+
+    public void setStorename(String storename) {
+        this.storename = storename;
+    }
 
     public String getId() {
         return id;

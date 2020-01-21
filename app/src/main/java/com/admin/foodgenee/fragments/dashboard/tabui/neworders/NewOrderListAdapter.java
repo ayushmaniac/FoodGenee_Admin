@@ -5,13 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.admin.foodgenee.R;
 import com.admin.foodgenee.fragments.dashboard.tabui.neworders.newordermodel.Product;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class NewOrderListAdapter extends  RecyclerView.Adapter<NewOrderListAdapter.NewOrderProudcts>{
 
@@ -31,7 +31,7 @@ public class NewOrderListAdapter extends  RecyclerView.Adapter<NewOrderListAdapt
 
     @Override
     public void onBindViewHolder(@NonNull NewOrderProudcts holder, int position) {
-        holder.textView.setText(list.get(position).getName());
+        holder.textView.setText(list.get(position).getName()+" * "+list.get(position).getCount());
 
     }
 

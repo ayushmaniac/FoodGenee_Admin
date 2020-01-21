@@ -5,13 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.admin.foodgenee.R;
 import com.admin.foodgenee.fragments.dashboard.tabui.neworders.NewOrderListAdapter;
@@ -19,6 +13,10 @@ import com.admin.foodgenee.fragments.dashboard.tabui.neworders.newordermodel.Ord
 import com.admin.foodgenee.fragments.dashboard.tabui.neworders.newordermodel.Product;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class NewOrderAdapter extends  RecyclerView.Adapter<NewOrderAdapter.NewViewHolder>{
 
@@ -47,11 +45,11 @@ public class NewOrderAdapter extends  RecyclerView.Adapter<NewOrderAdapter.NewVi
 
         try {
 //            holder.nOrderName.setText(list.get(position).getStorename());
-            holder.nOrderLine.setText(list.get(position).getOrderline());
+            holder.nOrderLine.setText("Line No : "+list.get(position).getOrderline());
             holder.nOrderTable.setText("Table No: "+list.get(position).getTablename());
             holder.nOrderAmount.setText("Total Amount: "+list.get(position).getTotalamount());
             holder.nOrderDate.setText(list.get(position).getRegdate());
-            holder.nOrderId.setText("Order ID: "+ list.get(position).getOrderId());
+            holder.nOrderId.setText("Order No: "+ list.get(position).getUniqueId());
             holder.recyclerView.setLayoutManager(new LinearLayoutManager(context.getApplicationContext()));
             NewOrderListAdapter adapter = new NewOrderListAdapter(listTwo);
             holder.recyclerView.setAdapter(adapter);

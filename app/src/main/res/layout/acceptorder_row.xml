@@ -5,119 +5,175 @@
 
 
     <androidx.cardview.widget.CardView
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="@dimen/_6sdp"
         android:layout_centerHorizontal="true"
-        android:elevation="10dp">
+        android:elevation="@dimen/_3sdp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
             android:layout_height="match_parent">
 
-
-            <TextView
-                android:id="@+id/acceptOrderUserName"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:textColor="@color/colorAccent"
-                android:layout_marginLeft="20dp"
-                android:text="Ayush Shrivastava"/>
+                android:weightSum="2"
+                android:padding="@dimen/_4sdp"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/acceptOrderUserName"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.8"
+                    android:gravity="left|center"
+                    android:layout_gravity="left|center"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_12sdp"
+                    android:textColor="@color/colorAccent"
+                    android:text="Ayush Shrivastava"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="right|center"
+                    android:layout_weight="1.2">
+                    <TextView
+                        android:id="@+id/acceptOrderDate"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/_10sdp"
+                        android:gravity="right|center"
+                        android:layout_below="@id/acceptOrderAmount"
+
+                        android:text="29 December 2019 - 15:12"/>
+
+                </LinearLayout>
+            </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/acceptOrderId"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ID: ABCDEFGHJ"
-                android:textStyle="italic"
-                android:layout_marginLeft="20dp"
-                android:layout_below="@id/acceptOrderUserName"/>
+                android:weightSum="2"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/acceptOrderId"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="ID: ABCDEFGHJ"
+                    android:textSize="@dimen/_12sdp"/>
+
+                <TextView
+                    android:id="@+id/acceptOrderAmount"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right|center"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_height="wrap_content"
+                    android:text="  Rs 500"/>
+
+            </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/acceptOrderAmount"
-                android:layout_width="wrap_content"
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/acceptOrderId"
-                android:layout_marginLeft="20dp"
-                android:text="Order Amount Total : Rs 500"/>
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:weightSum="2">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="100"
+                    android:id="@+id/acceptOrderRandomText"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_below="@id/acceptOrderDate"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="TB1"
+                    android:gravity="right|center"
+                    android:id="@+id/acceptOrderTableNo"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_below="@id/acceptOrderRandomText"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_30sdp"
+                android:weightSum="2"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginBottom="@dimen/_6sdp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_weight="0.8">
+
+                    <TextView
+                        android:id="@+id/newOrderPaidStatusText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/acceptOrderTableNo"
+                        android:text="Payment Status"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        android:textStyle="bold" />
+
+                    <Switch
+                        android:id="@+id/acceptOrderSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_15sdp"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="right|center"
+                    android:layout_weight="1.2">
+                    <Button
+                        android:id="@+id/acceptOrderDeliverButton"
+                        android:layout_width="@dimen/_60sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_below="@+id/acceptOrderSwitch"
+                        android:background="@color/colorAccent"
+                        android:text="Deliver"
+                        android:layout_gravity="right|center"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+            </LinearLayout>
 
 
 
-            <TextView
-                android:id="@+id/acceptOrderDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/acceptOrderAmount"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"
-                android:text="29 December 2019 - 15:12"/>
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="100"
-                android:textStyle="bold"
-                android:id="@+id/acceptOrderRandomText"
-                android:layout_marginLeft="20dp"
-                android:textSize="30dp"
-                android:layout_below="@id/acceptOrderDate"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TB1"
-                android:textStyle="bold"
-                android:id="@+id/acceptOrderTableNo"
-                android:layout_marginLeft="20dp"
-                android:textSize="30dp"
-                android:layout_below="@id/acceptOrderRandomText"/>
-
-
-            <TextView
-                android:id="@+id/newOrderPaidStatusText"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Paid Status"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimary"
-                android:layout_below="@id/acceptOrderTableNo"/>
-
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:id="@+id/acceptOrderSwitch"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/newOrderPaidStatusText"/>
-
-
-            <Button
-                android:id="@+id/acceptOrderDeliverButton"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_below="@+id/acceptOrderSwitch"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="20dp"
-                android:background="@color/colorAccent"
-                android:padding="10dp"
-                android:text="Deliver"
-                android:textColor="@color/white" />
 
 
 
 
 
-        </RelativeLayout>
+        </LinearLayout>
 
 
     </androidx.cardview.widget.CardView>

@@ -1,15 +1,13 @@
 package com.admin.foodgenee.fragments.dashboard.tabui.neworders;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,12 +23,14 @@ import com.admin.foodgenee.fragments.dashboard.tabui.neworders.newordermodel.Rej
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import network.FoodGenee;
 import network.RetrofitClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import session.SessionManager;
 
 /**
@@ -67,6 +67,12 @@ public class NewOrders extends Fragment implements NewOrderAdapter.OnButtonClick
         setupRecycler();
         setupRecyclerList();
         return  view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupRecycler();
     }
 
     private void setupRecyclerList() {
@@ -168,29 +174,47 @@ public class NewOrders extends Fragment implements NewOrderAdapter.OnButtonClick
     }
 
     private void acceptTheOrder(Order order) {
-
-        FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);
-        Call<AcceptModel> call = foodGenee.acceptNewOrder("acceptorder", order.getOrderId(), userId);
-        call.enqueue(new Callback<AcceptModel>() {
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.custom);
+        dialog.setCancelable(false);
+        EditText text = dialog.findViewById(R.id.et_time);
+        Button submit = dialog.findViewById(R.id.b_submit);
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<AcceptModel> call, Response<AcceptModel> response) {
+            public void onClick(View v) {
 
-                try {
+                if(text.getText().toString().length()>0&&text.getText().toString()!=null&&text.getText().toString()!=""){
 
-                    Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);
+                    Call<AcceptModel> call = foodGenee.acceptNewOrder("acceptorder", order.getOrderId(), userId,Integer.valueOf(text.getText().toString()));
+                    call.enqueue(new Callback<AcceptModel>() {
+                        @Override
+                        public void onResponse(Call<AcceptModel> call, Response<AcceptModel> response) {
 
+                            try {
+                                dialog.dismiss();
+                                Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<AcceptModel> call, Throwable t) {
+
+                        }
+                    });
                 }
-                catch (Exception e)
-                {
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AcceptModel> call, Throwable t) {
 
             }
         });
+
+        dialog.show();
+
+
 
     }
 }

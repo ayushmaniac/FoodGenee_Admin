@@ -1,31 +1,24 @@
 package com.admin.foodgenee.fragments.dashboard.tabui.acceptedorders;
 
-import android.media.Image;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.admin.foodgenee.R;
 import com.admin.foodgenee.fragments.dashboard.tabui.acceptedorders.acceptedadapter.AcceptedAdapter;
 import com.admin.foodgenee.fragments.dashboard.tabui.acceptedorders.acceptedmodel.AcceptedModel;
-import com.admin.foodgenee.fragments.dashboard.tabui.acceptedorders.acceptedmodel.DeliverModel;
 import com.admin.foodgenee.fragments.dashboard.tabui.acceptedorders.acceptedmodel.Order;
-
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import network.FoodGenee;
 import network.RetrofitClient;
 import retrofit2.Call;
@@ -34,7 +27,7 @@ import retrofit2.Response;
 import session.SessionManager;
 
 
-public class AcceptedOrders extends Fragment implements AcceptedAdapter.OnDeliverClickListner {
+public class AcceptedOrders extends Fragment  {
 
     RecyclerView recyclerView;
     ProgressBar progressBar;
@@ -66,6 +59,12 @@ public class AcceptedOrders extends Fragment implements AcceptedAdapter.OnDelive
         return  view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupRecycler();
+    }
+
     private void setupRecycler() {
 
 
@@ -84,12 +83,15 @@ public class AcceptedOrders extends Fragment implements AcceptedAdapter.OnDelive
                     progressBar.setVisibility(View.GONE);
                     noFood.setVisibility(View.VISIBLE);
                     noOrder.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
 
                 }
                 else if(acceptedModel.getStatus().equals("1")){
 
                     list = acceptedModel.getOrders();
-                    AcceptedAdapter acceptedOrders = new AcceptedAdapter(getActivity(), list, AcceptedOrders.this);
+                    noFood.setVisibility(View.GONE);
+                    noOrder.setVisibility(View.GONE);
+                    AcceptedAdapter acceptedOrders = new AcceptedAdapter(getActivity(), list,userId);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     progressBar.setVisibility(View.GONE);
                     recyclerView.setAdapter(acceptedOrders);
@@ -121,35 +123,7 @@ public class AcceptedOrders extends Fragment implements AcceptedAdapter.OnDelive
     }
 
 
-    @Override
-    public void onClick(int position) {
-
-        deliverOrder(list.get(position));
-
-    }
-
-    private void deliverOrder(Order order) {
-
-        FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);
-        Call<DeliverModel> call = foodGenee.deliverOrder("deliverorder", order.getOrderId(),userId);
-        call.enqueue(new Callback<DeliverModel>() {
-            @Override
-            public void onResponse(Call<DeliverModel> call, Response<DeliverModel> response) {
-
-                try{
-
-                    Toast.makeText(getContext(), "Order Delivered", Toast.LENGTH_SHORT).show();
-                }
-                catch (Exception e){
 
 
-                }
-            }
 
-            @Override
-            public void onFailure(Call<DeliverModel> call, Throwable t) {
-
-            }
-        });
-    }
 }

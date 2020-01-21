@@ -1,15 +1,15 @@
 package com.admin.foodgenee.splash;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
 
-import com.admin.foodgenee.Login;
 import com.admin.foodgenee.R;
 import com.admin.foodgenee.appintro.Welcome;
+import com.admin.foodgenee.firebaseservices.MyFirebaseMessagingService;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class Spalsh extends AppCompatActivity {
 
@@ -25,6 +25,8 @@ public class Spalsh extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //This method is used so that your splash activity
         //can cover the entire screen.
+      /*  Intent j = new Intent(Spalsh.this, MyFirebaseMessagingService.class);
+        startService(j);*/
 
         new Handler().postDelayed(() -> {
             Intent i=new Intent(Spalsh.this,

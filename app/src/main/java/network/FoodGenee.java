@@ -10,7 +10,6 @@ import com.admin.foodgenee.fragments.dashboard.tabui.neworders.newordermodel.Rej
 import com.admin.foodgenee.fragments.orders.OrdersModel.OrdersModel;
 import com.admin.foodgenee.fragments.profile.profilemodel.ChangePasswordModel;
 import com.admin.foodgenee.fragments.profile.profilemodel.UpdateModel;
-import com.admin.foodgenee.fragments.profile.profilemodel.UpdatePhotoModel;
 import com.admin.foodgenee.fragments.profile.profilemodel.UserModel;
 import com.admin.foodgenee.loginmodel.LoginModel;
 import com.admin.foodgenee.loginmodel.LoginStatusModel;
@@ -66,7 +65,8 @@ public interface FoodGenee {
     Call<AcceptModel> acceptNewOrder(
             @Field("action") String action,
             @Field("orderid") String orderid,
-            @Field("usersid") String usersid
+            @Field("usersid") String usersid,
+            @Field("preparetime") Integer preparetime
     );
 
 

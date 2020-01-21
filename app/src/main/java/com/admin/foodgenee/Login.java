@@ -1,7 +1,5 @@
 package com.admin.foodgenee;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +12,7 @@ import android.widget.Toast;
 import com.admin.foodgenee.forgotpassword.ui.ForgotPassword;
 import com.admin.foodgenee.loginmodel.LoginModel;
 
+import androidx.appcompat.app.AppCompatActivity;
 import network.FoodGenee;
 import network.RetrofitClient;
 import retrofit2.Call;
@@ -60,6 +59,7 @@ public class Login extends AppCompatActivity {
 
             Intent intent = new Intent(Login.this, Root.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("type","Login");
             startActivity(intent);
 
             checkLoginStatus();
@@ -91,6 +91,7 @@ public class Login extends AppCompatActivity {
                         sessionManager.createSession(response.body().getUsersid(), response.body().getText());
                         Intent intent = new Intent(Login.this, Root.class);
                         intent.putExtra("url", response.body().getText());
+                        intent.putExtra("type","Login");
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
 
