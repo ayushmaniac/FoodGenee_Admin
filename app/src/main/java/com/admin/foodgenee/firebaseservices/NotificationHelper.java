@@ -15,13 +15,12 @@ import androidx.core.app.NotificationManagerCompat;
 
 
 public final class NotificationHelper {
+
     public static final NotificationHelper INSTANCE;
 
 
 
     public static void navigateNotification(@NonNull Context context, @NonNull String title, @NonNull String body) {
-
-
 
 
         Intent intent = new Intent(context, Root.class);
