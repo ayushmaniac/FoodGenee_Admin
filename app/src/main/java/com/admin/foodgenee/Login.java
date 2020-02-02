@@ -1,6 +1,9 @@
 package com.admin.foodgenee;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -51,8 +54,9 @@ public class Login extends AppCompatActivity {
 
         loginHere.setOnClickListener(view -> {
             progressBar.setVisibility(View.VISIBLE);
-
+            if (isNetworkAvailable())
             giveLoginCall();
+            else Toast.makeText(this, "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
         });
 
         if(sessionManager.isLoggin()){
@@ -65,6 +69,11 @@ public class Login extends AppCompatActivity {
             checkLoginStatus();
         }
     }
+    public boolean isNetworkAvailable() {
+ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+ NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+ return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+ }
 
     private void checkLoginStatus() {
 

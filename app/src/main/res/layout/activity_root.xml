@@ -6,9 +6,75 @@
     android:layout_height="match_parent"
     tools:context=".Root">
 
+        <RelativeLayout
+            android:id="@+id/ll_toolbar"
+            android:layout_width="match_parent"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingRight="@dimen/_10sdp"
+            android:elevation="@dimen/_4sdp"
+            android:background="@color/colorPrimary"
+            android:layout_height="?attr/actionBarSize">
+            <TextView
+                android:id="@+id/acceptOrderUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center"
+                android:layout_weight="0.8"
+                android:layout_centerInParent="true"
+                android:gravity="left|center"
+                android:text="FoodQ Polite"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp"
+               />
+            <com.github.angads25.toggle.LabeledSwitch
+                android:id="@+id/turnbutton"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:textSize="@dimen/_12sdp"
+                app:on="false"
+                app:textOn="Online"
+                app:textOff="Offline"
+                app:colorOn="#00c4a6"
+                app:colorBorder="#00c4a6"
+                android:layout_centerInParent="true"
+                />
+            <RelativeLayout
+                android:id="@+id/badge_layout1"
+                android:layout_width="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:id="@+id/relative_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/notification"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:background="@drawable/bell_outline" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/relative_layout"
+                    android:background="@drawable/badge_item_count"
+                    android:text="27"
+                    android:textColor="#FFF"
+                    android:textSize="@dimen/_8sdp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
 
     <FrameLayout
         android:id="@+id/fragment_container"
+        android:layout_below="@+id/ll_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_navigation"/>
@@ -22,6 +88,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
+        android:theme="@style/BottomNavigationTheme"
         android:background="?android:attr/windowBackground"
         app:menu="@menu/bottom_navigation_menu" />
 

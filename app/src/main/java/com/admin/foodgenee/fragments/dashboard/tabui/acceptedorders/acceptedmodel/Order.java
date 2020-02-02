@@ -40,6 +40,18 @@ public class Order {
     @Expose
     private String username;
 
+    @SerializedName("reorder")
+    @Expose
+    private String reorder;
+
+    public String getReorder() {
+        return reorder;
+    }
+
+    public void setReorder(String reorder) {
+        this.reorder = reorder;
+    }
+
     public String getUsername() {
         return username;
     }

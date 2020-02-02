@@ -43,6 +43,14 @@ public final class NotificationHelper {
         i.putExtra("type","notification");
         context.startActivity(i);
 
+        //Done!
+        //okay
+        //is all done?
+        //Yes everything is done, I'll just build the bundle and give it to either you or venu
+        //okay thank you
+        //great nice talking
+        //same here :-)
+
     }
 
 

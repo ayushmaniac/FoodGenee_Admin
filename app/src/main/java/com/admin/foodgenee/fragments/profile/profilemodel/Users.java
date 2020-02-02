@@ -26,6 +26,42 @@ public class Users {
     @Expose
     private String storename;
 
+    @SerializedName("totalorders")
+    @Expose
+    private String totalorders;
+
+    @SerializedName("todayorders")
+    @Expose
+    private String todayorders;
+
+    @SerializedName("totalpoints")
+    @Expose
+    private String totalpoints;
+
+    public String getTotalorders() {
+        return totalorders;
+    }
+
+    public void setTotalorders(String totalorders) {
+        this.totalorders = totalorders;
+    }
+
+    public String getTodayorders() {
+        return todayorders;
+    }
+
+    public void setTodayorders(String todayorders) {
+        this.todayorders = todayorders;
+    }
+
+    public String getTotalpoints() {
+        return totalpoints;
+    }
+
+    public void setTotalpoints(String totalpoints) {
+        this.totalpoints = totalpoints;
+    }
+
     public String getStorename() {
         return storename;
     }

@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,6 +33,7 @@ import com.admin.foodgenee.fragments.profile.profilemodel.ChangePasswordModel;
 import com.admin.foodgenee.fragments.profile.profilemodel.UpdateModel;
 import com.admin.foodgenee.fragments.profile.profilemodel.UserModel;
 import com.bumptech.glide.Glide;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.ServerResponse;
@@ -58,6 +61,7 @@ import androidx.fragment.app.Fragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 import network.FoodGenee;
 import network.RetrofitClient;
+import okhttp3.ResponseBody;
 import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -69,17 +73,18 @@ import session.SessionManager;
  */
 public class Profile extends Fragment implements Root.ActivityResultListener {
 
-    Button logoutButton;
+    TextView logoutButton;
     SessionManager sessionManager;
     String userId;
-    EditText name, email, mobile,editLocation;
+    TextView name, email, mobile,editLocation,mTvToday,mTvTotal,mTvPoints;
     CircleImageView profilePic;
-    TextView onTopNamel, changePassword;
+    TextView  changePassword;
     CardView hiddenLayout;
     Button submitChangeDetails, submitNewPassword;
     Dialog loadingDialog;
     EditText newPassword, conFirmPassword;
     Uri imageUri;
+    String firebaseToken;
     private static final  int PERMISSIONS_MULTIPLE_REQUEST = 123;
 
     private static final int REQUEST_CAMERA_CODE = 100;
@@ -124,13 +129,56 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
         userId = getUrl.get(sessionManager.USER_ID);
         loadingDialog = new Dialog(getContext());
         loadingDialog.setContentView(R.layout.loading_dialog);
-        loadingDialog.show();
+
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
+        if(isNetworkAvailable())
         getServiceBoy();
+        else Toast.makeText(getActivity(), "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
         logoutButton.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder
+                    .setMessage("Are you sure, Do you want to logout ?")
+                    .setCancelable(false)
+                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            FirebaseInstanceId.getInstance().getInstanceId()
+                                    .addOnCompleteListener(task -> {
+                                        if (!task.isSuccessful()) {
+                                            return;
+                                        }
 
-            sessionManager.logout();
+                                        firebaseToken = task.getResult().getToken();
+                                        Log.e("firebaseToken",firebaseToken);
+                                    });
+
+                            FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);
+                            Call<ResponseBody> call = foodGenee.sendStatus("login-status", userId,"0", firebaseToken);
+
+                            call.enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                    sessionManager.logout();
+                                    dialog.dismiss();
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                    Toast.makeText(getActivity(), "Some error occured", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
+                        }
+                    });
+            AlertDialog dialog  = builder.create();
+            dialog.show();
+
+
         });
         changePassword.setOnClickListener(v -> {
 
@@ -140,11 +188,19 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
 
         submitChangeDetails.setOnClickListener(v -> {
 
+            if(isNetworkAvailable())
             getValuesAndThrowUpdateCall();
+            else Toast.makeText(getActivity(), "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
 
         });
 
-        submitNewPassword.setOnClickListener(v -> throwCallsForPasswordUpdation());
+        submitNewPassword.setOnClickListener(v ->{if(isNetworkAvailable())
+            throwCallsForPasswordUpdation();
+        else Toast.makeText(getActivity(), "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();}
+
+    );
+
+
 
         profilePic.setOnClickListener(v -> {
 
@@ -154,6 +210,12 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
         return view;
 
     }
+
+    public boolean isNetworkAvailable() {
+ ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+ NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+ return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+ }
 
     private void checkUserPermission() {
     }
@@ -310,11 +372,14 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
     }
 
     private void initViews(View view) {
-        name = view.findViewById(R.id.editName);
-        email = view.findViewById(R.id.editEmail);
-        mobile = view.findViewById(R.id.editMobile);
-        editLocation=view.findViewById(R.id.editLocation);
-        onTopNamel = view.findViewById(R.id.serviceBoyName);
+        name = view.findViewById(R.id.serviceBoyName);
+        email = view.findViewById(R.id.serviceBoyEmail);
+        mobile = view.findViewById(R.id.serviceBoyMobile);
+        editLocation=view.findViewById(R.id.serviceBoyStoreName);
+        mTvToday=view.findViewById(R.id.tv_today);
+        mTvTotal=view.findViewById(R.id.tv_total);
+        mTvPoints=view.findViewById(R.id.tv_points);
+        //onTopNamel = view.findViewById(R.id.serviceBoyName);
         submitChangeDetails = view.findViewById(R.id.subimitUpdate);
         submitNewPassword = view.findViewById(R.id.submitNewPassword);
         profilePic = view.findViewById(R.id.boyImage);
@@ -326,7 +391,7 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
     }
 
     private void getServiceBoy() {
-
+        loadingDialog.show();
         FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);
         Call<UserModel> call = foodGenee.getUserDetails("serviceboy",userId);
         call.enqueue(new Callback<UserModel>() {
@@ -343,11 +408,14 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
 
                     }
                     else if(userModel.getStatus().equals("1")){
-                        onTopNamel.setText(userModel.getUsers().getName());
+                        //onTopNamel.setText(userModel.getUsers().getName());
                         name.setText(userModel.getUsers().getName());
                         email.setText(userModel.getUsers().getEmail());
                         mobile.setText(userModel.getUsers().getMobile());
                         editLocation.setText(userModel.getUsers().getStorename());
+                        mTvPoints.setText(userModel.getUsers().getTotalpoints());
+                        mTvToday.setText(userModel.getUsers().getTodayorders());
+                        mTvTotal.setText(userModel.getUsers().getTotalorders());
 
                         Glide.with(getContext())
                                 .load(userModel.getUsers().getProfilepic())

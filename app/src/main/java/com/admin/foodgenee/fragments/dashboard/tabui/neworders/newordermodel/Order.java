@@ -44,6 +44,17 @@ public class Order {
     @SerializedName("regdate")
     @Expose
     private String regdate;
+    @SerializedName("order")
+    @Expose
+    private String order;
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
 
     public String getOrderId() {
         return orderId;

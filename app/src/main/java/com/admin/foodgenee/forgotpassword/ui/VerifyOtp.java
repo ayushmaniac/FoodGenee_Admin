@@ -1,24 +1,21 @@
 package com.admin.foodgenee.forgotpassword.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.admin.foodgenee.R;
 import com.admin.foodgenee.forgotpassword.model.VerifyModel;
-import com.chaos.view.PinView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import network.FoodGenee;
 import network.RetrofitClient;
 import retrofit2.Call;
@@ -48,50 +45,58 @@ public class VerifyOtp extends AppCompatActivity {
             FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);
         String otp = et1.getText().toString().trim()+et2.getText().toString().trim()+et3.getText().toString().trim()+et4.getText().toString().trim();
 
-            Call<VerifyModel> call = foodGenee.verifyOtp("forgotpassword-otp", userId, otp);
-            call.enqueue(new Callback<VerifyModel>() {
-                @Override
-                public void onResponse(Call<VerifyModel> call, Response<VerifyModel> response) {
+            if(isNetworkAvailable()){
+                Call<VerifyModel> call = foodGenee.verifyOtp("forgotpassword-otp", userId, otp);
+                call.enqueue(new Callback<VerifyModel>() {
+                    @Override
+                    public void onResponse(Call<VerifyModel> call, Response<VerifyModel> response) {
 
-                    try {
+                        try {
 
 
-                        if (response.body().getStatus().equals("1")) {
+                            if (response.body().getStatus().equals("1")) {
+                                loadingDialog.cancel();
+                                loadingDialog.dismiss();
+                                Toast.makeText(VerifyOtp.this, response.body().getText(), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(VerifyOtp.this, ChangePassword.class);
+                                intent.putExtra("usersid", response.body().getUsersid());
+                                startActivity(intent);
+
+                            } else if (response.body().getStatus().equals("0")) {
+
+                                loadingDialog.cancel();
+                                loadingDialog.dismiss();
+                                Toast.makeText(VerifyOtp.this, response.body().getText(), Toast.LENGTH_SHORT).show();
+
+                            }
+
+                        } catch (Exception e) {
+
                             loadingDialog.cancel();
                             loadingDialog.dismiss();
-                            Toast.makeText(VerifyOtp.this, response.body().getText(), Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(VerifyOtp.this, ChangePassword.class);
-                            intent.putExtra("usersid", response.body().getUsersid());
-                            startActivity(intent);
-
-                        } else if (response.body().getStatus().equals("0")) {
-
-                            loadingDialog.cancel();
-                            loadingDialog.dismiss();
-                            Toast.makeText(VerifyOtp.this, response.body().getText(), Toast.LENGTH_SHORT).show();
 
                         }
-
-                    } catch (Exception e) {
-
+                    }
+                    @Override
+                    public void onFailure(Call<VerifyModel> call, Throwable t) {
                         loadingDialog.cancel();
                         loadingDialog.dismiss();
 
                     }
-                }
-                @Override
-                public void onFailure(Call<VerifyModel> call, Throwable t) {
-                    loadingDialog.cancel();
-                    loadingDialog.dismiss();
+                });
+            } else Toast.makeText(this, "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
 
-                }
-            });
 
         });
 
-
-
 }
+
+      public boolean isNetworkAvailable(){
+          ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+          NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+          return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+      }
+
 
     private void initViews() {
 
@@ -191,9 +196,7 @@ public class VerifyOtp extends AppCompatActivity {
             }
         });
 
-
-
-
-
     }
+
+
 }

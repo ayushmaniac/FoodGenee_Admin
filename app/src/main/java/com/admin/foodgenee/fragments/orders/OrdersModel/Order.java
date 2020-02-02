@@ -36,6 +36,18 @@ public class Order {
     @Expose
     private String regdate;
 
+    @SerializedName("orderprocesstext")
+    @Expose
+    private String orderprocesstext;
+
+    public String getOrderprocesstext() {
+        return orderprocesstext;
+    }
+
+    public void setOrderprocesstext(String orderprocesstext) {
+        this.orderprocesstext = orderprocesstext;
+    }
+
     public String getOrderId() {
         return orderId;
     }

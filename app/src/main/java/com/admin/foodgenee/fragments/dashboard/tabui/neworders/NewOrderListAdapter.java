@@ -31,7 +31,7 @@ public class NewOrderListAdapter extends  RecyclerView.Adapter<NewOrderListAdapt
 
     @Override
     public void onBindViewHolder(@NonNull NewOrderProudcts holder, int position) {
-        holder.textView.setText(list.get(position).getName()+" * "+list.get(position).getCount());
+        holder.textView.setText("  "+list.get(position).getOrder()+"  "+list.get(position).getName()+" * "+list.get(position).getCount());
 
     }
 

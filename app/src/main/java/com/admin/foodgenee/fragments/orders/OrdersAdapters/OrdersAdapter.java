@@ -5,19 +5,17 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Switch;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.admin.foodgenee.R;
 import com.admin.foodgenee.fragments.orders.OrdersModel.Order;
 import com.admin.foodgenee.orderdetails.ui.OrderDetails;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.DateOrdersViewHolder> {
 
@@ -43,12 +41,17 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.DateOrders
 
         try {
             holder.nOrderName.setText(list.get(position).getStorename());
-            holder.nOrderLine.setText(list.get(position).getOrderline());
-            holder.nOrderTable.setText(list.get(position).getTablename());
-            holder.nOrderAmount.setText("Total Amount: " + list.get(position).getTotalamount());
-            holder.nOrderDate.setText(list.get(position).getRegdate());
-            holder.nOrderId.setText("Order ID: " + list.get(position).getOrderId());
-            holder.nOrderPaymentType.setText("Payment Type: " + list.get(position).getPaymenttype());
+            holder.nOrderLine.setText("Order No : "+list.get(position).getOrderline());
+            holder.nOrderTable.setText("Table No : "+list.get(position).getTablename());
+            holder.nOrderAmount.setText("Amount : " + list.get(position).getTotalamount());
+            holder.nOrderDate.setText("Date : "+list.get(position).getRegdate());
+            holder.nOrderId.setText("Order ID : " + list.get(position).getUniqueId());
+            if(list.get(position).getPaidstatus().equalsIgnoreCase("0"))
+                holder.nOrderPaymentType.setText("Paid Status : Unpaid");
+            else  holder.nOrderPaymentType.setText("Paid Status : Paid");
+            holder.mTvOrderStaus.setText(list.get(position).getOrderprocesstext());
+
+
             holder.orderCard.setOnClickListener(v -> {
 
                 Intent intent = new Intent(context, OrderDetails.class);
@@ -69,7 +72,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.DateOrders
     }
 
     public class DateOrdersViewHolder extends RecyclerView.ViewHolder  {
-        TextView nOrderName, nOrderDate, nOrderId, nOrderAmount, nOrderTable, nOrderLine, nOrderPaymentType;
+        TextView nOrderName, nOrderDate, nOrderId, nOrderAmount, nOrderTable, nOrderLine,
+                nOrderPaymentType,mTvOrderStaus;
         CardView orderCard;
 
         public DateOrdersViewHolder(@NonNull View itemView) {
@@ -81,6 +85,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.DateOrders
             nOrderTable = itemView.findViewById(R.id.newOrderTableNo);
             nOrderLine = itemView.findViewById(R.id.newOrderRandomText);
             nOrderPaymentType = itemView.findViewById(R.id.newOrderPaidStatusText);
+            mTvOrderStaus=itemView.findViewById(R.id.tv_order_status);
             orderCard = itemView.findViewById(R.id.orderCard);
         }
 

@@ -1,11 +1,15 @@
 package com.admin.foodgenee.fragments.dashboard.tabui.acceptedorders.acceptedadapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +17,7 @@ import android.widget.Toast;
 import com.admin.foodgenee.R;
 import com.admin.foodgenee.fragments.dashboard.tabui.acceptedorders.acceptedmodel.DeliverModel;
 import com.admin.foodgenee.fragments.dashboard.tabui.acceptedorders.acceptedmodel.Order;
+import com.admin.foodgenee.orderdetails.ui.OrderDetails;
 
 import java.util.List;
 
@@ -29,7 +34,7 @@ public class AcceptedAdapter extends RecyclerView.Adapter<AcceptedAdapter.Accept
     Context context;
     List<Order> list;
     String userId;
-
+    private RecyclerItemClickListener recyclerItemClickListener;
     public AcceptedAdapter(Context context, List<Order> list,String userId) {
         this.context = context;
         this.list = list;
@@ -44,17 +49,29 @@ public class AcceptedAdapter extends RecyclerView.Adapter<AcceptedAdapter.Accept
         return acceptedViewHolder;
 
     }
+    public void setOnClickListener(RecyclerItemClickListener recyclerItemClickListener) {
+        this.recyclerItemClickListener = recyclerItemClickListener;
+    }
 
     @Override
     public void onBindViewHolder(@NonNull AcceptedViewHolder holder, int position) {
 
         try {
             holder.nOrderName.setText(list.get(position).getUsername());
-            holder.nOrderLine.setText("Line No :"+list.get(position).getOrderline());
+            holder.nOrderLine.setText("No :"+list.get(position).getOrderline());
             holder.nOrderTable.setText("Table No : "+list.get(position).getTablename());
-            holder.nOrderAmount.setText("Rs : "+list.get(position).getTotalamount());
-            holder.nOrderDate.setText(list.get(position).getRegdate());
+            holder.nOrderAmount.setText("₹ "+list.get(position).getTotalamount());
+            holder.nOrderDate.setText("Date : "+list.get(position).getRegdate());
             holder.nOrderId.setText("Order ID: "+ list.get(position).getUniqueId());
+            if(list.get(position).getOrderprocess().equalsIgnoreCase("2")||
+                    list.get(position).getOrderprocess().equalsIgnoreCase("4")){
+                holder.mTvStatus.setText("Delivered");
+                holder.deliverButton.setVisibility(View.GONE);
+            }else if(list.get(position).getOrderprocess().equalsIgnoreCase("3")){
+                holder.mTvStatus.setText("Canceled");
+                holder.deliverButton.setVisibility(View.GONE);
+            }else {holder.deliverButton.setVisibility(View.VISIBLE);
+            holder.mTvStatus.setVisibility(View.GONE);}
 
             if(list.get(position).getPaidstatus().equals("0")){
                 holder.newOrderPaidStatusText.setText("Payment Status ");
@@ -65,42 +82,57 @@ public class AcceptedAdapter extends RecyclerView.Adapter<AcceptedAdapter.Accept
                 holder.newOrderPaidStatusText.setText("Payment Status : Paid");
             }
 
+            if(list.get(position).getReorder().equalsIgnoreCase("1"))
+                holder.mTvReorder.setVisibility(View.VISIBLE);
+            else holder.mTvReorder.setVisibility(View.GONE);
+
+            holder.mLLItem.setOnClickListener(v -> {
+
+                Intent intent = new Intent(context, OrderDetails.class);
+                intent.putExtra("orderId", list.get(position).getOrderId());
+                context.startActivity(intent);
+            });
+
             holder.nPaidSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if(b){
-                        FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);
-                        Call<DeliverModel> call = foodGenee.deliverOrder("paidstatus", list.get(position).getOrderId(),userId);
-                        call.enqueue(new Callback<DeliverModel>() {
-                            @Override
-                            public void onResponse(Call<DeliverModel> call, Response<DeliverModel> response) {
+                        if(isNetworkAvailable()){
+                            FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);
+                            Call<DeliverModel> call = foodGenee.deliverOrder("paidstatus", list.get(position).getOrderId(),userId);
+                            call.enqueue(new Callback<DeliverModel>() {
+                                @Override
+                                public void onResponse(Call<DeliverModel> call, Response<DeliverModel> response) {
 
-                                try{
-                                    if(response.body().getStatus().equalsIgnoreCase("1")) {
+                                    try{
+                                        if(response.body().getStatus().equalsIgnoreCase("1")) {
 
-                                        Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                        holder.nPaidSwitch.setVisibility(View.GONE);
-                                        holder.newOrderPaidStatusText.setText("Payment Status : Paid");
-                                    }else if(response.body().getStatus().equalsIgnoreCase("0")) {
-                                        Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                        holder.newOrderPaidStatusText.setText("Payment Status ");
-                                        holder.nPaidSwitch.setVisibility(View.VISIBLE);
-                                        holder.nPaidSwitch.setChecked(false);
+                                            Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            holder.nPaidSwitch.setVisibility(View.GONE);
+                                            holder.newOrderPaidStatusText.setText("Payment Status : Paid");
+                                        }else if(response.body().getStatus().equalsIgnoreCase("0")) {
+                                            Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            holder.newOrderPaidStatusText.setText("Payment Status ");
+                                            holder.nPaidSwitch.setVisibility(View.VISIBLE);
+                                            holder.nPaidSwitch.setChecked(false);
+                                        }
+
+
                                     }
+                                    catch (Exception e){
 
+
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<DeliverModel> call, Throwable t) {
 
                                 }
-                                catch (Exception e){
+                            });
+                        }else Toast.makeText(context, "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
 
 
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<DeliverModel> call, Throwable t) {
-
-                            }
-                        });
                     }else{
                         holder.newOrderPaidStatusText.setText("Payment Status ");
                         holder.nPaidSwitch.setVisibility(View.VISIBLE);
@@ -114,34 +146,9 @@ public class AcceptedAdapter extends RecyclerView.Adapter<AcceptedAdapter.Accept
             holder.deliverButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);
-                    Call<DeliverModel> call = foodGenee.deliverOrder("deliverorder", list.get(position).getOrderId(),userId);
-                    call.enqueue(new Callback<DeliverModel>() {
-                        @Override
-                        public void onResponse(Call<DeliverModel> call, Response<DeliverModel> response) {
-
-                            try{
-                                if(response.body().getStatus().equalsIgnoreCase("1")) {
-
-                                    Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                    removeAt(position);
-                                }else if(response.body().getStatus().equalsIgnoreCase("0")) {
-                                    Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                    recyclerItemClickListener.onItemClickListener(position);
 
 
-                            }
-                            catch (Exception e){
-
-
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<DeliverModel> call, Throwable t) {
-
-                        }
-                    });
                 }
             });
 
@@ -154,6 +161,13 @@ public class AcceptedAdapter extends RecyclerView.Adapter<AcceptedAdapter.Accept
 
     }
 
+    public boolean isNetworkAvailable() {
+ ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+ NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+ return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+ }
+
+
     @Override
     public int getItemCount() {
         return list.size();
@@ -161,9 +175,11 @@ public class AcceptedAdapter extends RecyclerView.Adapter<AcceptedAdapter.Accept
 
     public  class AcceptedViewHolder extends RecyclerView.ViewHolder {
 
-        TextView nOrderName, nOrderDate, nOrderId, nOrderAmount,nOrderTable, nOrderLine,newOrderPaidStatusText;
+        TextView nOrderName, nOrderDate, nOrderId, nOrderAmount,nOrderTable, nOrderLine,
+                newOrderPaidStatusText,mTvStatus,mTvReorder;
         Switch nPaidSwitch;
         Button deliverButton;
+        LinearLayout mLLItem;
         public AcceptedViewHolder(@NonNull View itemView) {
             super(itemView);
             nOrderName = itemView.findViewById(R.id.acceptOrderUserName);
@@ -175,6 +191,9 @@ public class AcceptedAdapter extends RecyclerView.Adapter<AcceptedAdapter.Accept
             nPaidSwitch = itemView.findViewById(R.id.acceptOrderSwitch);
             deliverButton = itemView.findViewById(R.id.acceptOrderDeliverButton);
             newOrderPaidStatusText=itemView.findViewById(R.id.newOrderPaidStatusText);
+            mTvStatus=itemView.findViewById(R.id.tv_status);
+            mLLItem=itemView.findViewById(R.id.ll_item);
+            mTvReorder=itemView.findViewById(R.id.tv_order_status);
 
 
         }

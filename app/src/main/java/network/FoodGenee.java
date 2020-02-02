@@ -9,6 +9,7 @@ import com.admin.foodgenee.fragments.dashboard.tabui.neworders.newordermodel.New
 import com.admin.foodgenee.fragments.dashboard.tabui.neworders.newordermodel.RejectModel;
 import com.admin.foodgenee.fragments.orders.OrdersModel.OrdersModel;
 import com.admin.foodgenee.fragments.profile.profilemodel.ChangePasswordModel;
+import com.admin.foodgenee.fragments.profile.profilemodel.NotificationModel;
 import com.admin.foodgenee.fragments.profile.profilemodel.UpdateModel;
 import com.admin.foodgenee.fragments.profile.profilemodel.UserModel;
 import com.admin.foodgenee.loginmodel.LoginModel;
@@ -168,11 +169,17 @@ public interface FoodGenee {
     );
 
     @FormUrlEncoded
+    @POST("serviceboy/notifications.php")
+    Call<NotificationModel> getNotifications(
+            @Field("action") String action,
+            @Field("usersid") String usersid
+    );
+
+    @FormUrlEncoded
     @POST("serviceboy/boy-registration.php")
     Call<LoginStatusModel> checkLoginStatus(
             @Field("action") String action,
             @Field("usersid") String usersid
     );
-
 }
 

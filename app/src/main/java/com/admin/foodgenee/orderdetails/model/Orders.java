@@ -32,9 +32,118 @@ public class Orders {
         @SerializedName("paidstatus")
         @Expose
         private String paidstatus;
-        @SerializedName("products")
+         @Expose
+         @SerializedName("tax")
+         private String tax;
+         @Expose
+         @SerializedName("tips")
+         private String tips;
+         @Expose
+        @SerializedName("subscription")
+        private String subscription;
+         @Expose
+        @SerializedName("couponamount")
+         private String couponamount;
+        @Expose
+        @SerializedName("coverpic")
+        private String coverpic;
+        @Expose
+        @SerializedName("logo")
+        private String logo;
+        @Expose
+        @SerializedName("username")
+        private String username;
+
+    @Expose
+    @SerializedName("orderprocesstext")
+    private String orderprocesstext;
+
+    @Expose
+    @SerializedName("pendingamount")
+    private String pendingamount;
+
+
+    public String getPendingamount() {
+        return pendingamount;
+    }
+
+    public void setPendingamount(String pendingamount) {
+        this.pendingamount = pendingamount;
+    }
+
+    public String getOrderprocesstext() {
+        return orderprocesstext;
+    }
+
+    public void setOrderprocesstext(String orderprocesstext) {
+        this.orderprocesstext = orderprocesstext;
+    }
+
+    public String getCoverpic() {
+        return coverpic;
+    }
+
+    public void setCoverpic(String coverpic) {
+        this.coverpic = coverpic;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @SerializedName("products")
         @Expose
         private List<Product> products = null;
+
+
+
+    public String getTax() {
+        return tax;
+    }
+
+    public void setTax(String tax) {
+        this.tax = tax;
+    }
+
+    public String getTips() {
+        return tips;
+    }
+
+    public void setTips(String tips) {
+        this.tips = tips;
+    }
+
+    public String getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(String subscription) {
+        this.subscription = subscription;
+    }
+
+    public String getCouponamount() {
+        return couponamount;
+    }
+
+    public void setCouponamount(String couponamount) {
+        this.couponamount = couponamount;
+    }
+
+
+
+
 
         public String getOrderId() {
             return orderId;

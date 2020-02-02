@@ -1,16 +1,19 @@
 package com.admin.foodgenee.fragments.dashboard.tabui.neworders.neworderadapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.admin.foodgenee.R;
 import com.admin.foodgenee.fragments.dashboard.tabui.neworders.NewOrderListAdapter;
 import com.admin.foodgenee.fragments.dashboard.tabui.neworders.newordermodel.Order;
 import com.admin.foodgenee.fragments.dashboard.tabui.neworders.newordermodel.Product;
+import com.admin.foodgenee.orderdetails.ui.OrderDetails;
 
 import java.util.List;
 
@@ -53,6 +56,13 @@ public class NewOrderAdapter extends  RecyclerView.Adapter<NewOrderAdapter.NewVi
             holder.recyclerView.setLayoutManager(new LinearLayoutManager(context.getApplicationContext()));
             NewOrderListAdapter adapter = new NewOrderListAdapter(listTwo);
             holder.recyclerView.setAdapter(adapter);
+
+            holder.ll_item.setOnClickListener(v -> {
+
+                Intent intent = new Intent(context, OrderDetails.class);
+                intent.putExtra("orderId", list.get(position).getOrderId());
+                context.startActivity(intent);
+            });
 //
 //            if(list.get(position).getOrderprocess().equals("0")){
 //
@@ -84,6 +94,7 @@ public class NewOrderAdapter extends  RecyclerView.Adapter<NewOrderAdapter.NewVi
         Button nAcceptButton, nRejectButton;
         OnButtonClickListener buttonClickListener;
         RecyclerView recyclerView;
+        LinearLayout ll_item;
 
         public NewViewHolder(@NonNull View itemView, OnButtonClickListener buttonClickListener) {
             super(itemView);
@@ -100,6 +111,7 @@ public class NewOrderAdapter extends  RecyclerView.Adapter<NewOrderAdapter.NewVi
             nAcceptButton.setOnClickListener(this);
             nRejectButton.setOnClickListener(this);
             recyclerView = itemView.findViewById(R.id.productsRecycler);
+            ll_item=itemView.findViewById(R.id.ll_item);
         }
 
         @Override
@@ -107,13 +119,13 @@ public class NewOrderAdapter extends  RecyclerView.Adapter<NewOrderAdapter.NewVi
 
             if (v.getId() == nAcceptButton.getId()){
                 buttonClickListener.onButtonClick(getAdapterPosition(), "accept");
-                removeAt(getAdapterPosition());
+                //removeAt(getAdapterPosition());
             }
 
             else if(v.getId() == nRejectButton.getId()){
 
                 buttonClickListener.onButtonClick(getAdapterPosition(), "reject");
-                removeAt(getAdapterPosition());
+              //  removeAt(getAdapterPosition());
 
             }
         }

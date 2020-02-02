@@ -7,7 +7,13 @@
     <item
         android:id="@+id/toggleservice"
         android:title="TODO"
-        app:actionViewClass="android.widget.Switch"
+        android:layout_gravity="center"
+        app:actionViewClass="com.github.angads25.toggle.LabeledSwitch"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/notification"
+        android:icon="@drawable/bell_outline"
+        android:title="Notification"
         app:showAsAction="ifRoom" />
 
 </menu>

@@ -6,21 +6,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.admin.foodgenee.fragments.dashboard.Dashboard;
 import com.admin.foodgenee.fragments.orders.OrdersUI.Orders;
+import com.admin.foodgenee.fragments.profile.NotificationActivity;
 import com.admin.foodgenee.fragments.profile.Profile;
-import com.admin.foodgenee.fragments.todaysorder.TodaysOrde;
+import com.admin.foodgenee.fragments.profile.profilemodel.NotificationModel;
 import com.admin.foodgenee.loginmodel.LoginStatusModel;
+import com.github.angads25.toggle.LabeledSwitch;
+import com.github.angads25.toggle.interfaces.OnToggledListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -48,18 +54,45 @@ public class Root extends AppCompatActivity {
     ActivityResultListener listener;
     String type="login";
     MediaPlayer mp;
+    LabeledSwitch labeledSwitch;
     public static final String NOTIFICATION_ID = "NOTIFICATION_ID";
+    ImageView notification;
+    TextView tv_count;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_root);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.switch_layout);
         sessionManager = new SessionManager(this);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         HashMap<String, String> getUrl = sessionManager.getUserDetail();
         userId = getUrl.get(sessionManager.USER_ID);
-       // the song is a filename which i have pasted inside a folder **raw** created under the **res** folder.//
+        labeledSwitch=findViewById(R.id.turnbutton);
+        tv_count=findViewById(R.id.tv_count);
+        notification=findViewById(R.id.notification);
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(Root.this, NotificationActivity.class);
+                startActivity(i);
+            }
+        });
+        labeledSwitch.setOnToggledListener(new OnToggledListener() {
+            @Override
+            public void onSwitched(LabeledSwitch labeledSwitch, boolean isOn) {
+                if (isOn) {
+                    if(isNetworkAvailable())
+                        throwCalls("1");
+                    else Toast.makeText(Root.this, "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
+                } else {
+                    if(isNetworkAvailable())
+                        throwCalls("0");
+                    else Toast.makeText(Root.this, "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
         mp=new MediaPlayer();
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -105,9 +138,9 @@ public class Root extends AppCompatActivity {
                     case R.id.navigation_dashboard:
                         selectedFragment = new Dashboard();
                         break;
-                    case R.id.navigation_todaysorder:
+                   /* case R.id.navigation_todaysorder:
                         selectedFragment = new TodaysOrde();
-                        break;
+                        break;*/
                     case R.id.navigation_orders:
                         selectedFragment = new Orders();
                         break;
@@ -124,26 +157,49 @@ public class Root extends AppCompatActivity {
                 return true;
             };
 
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         final MenuItem toggleservice = menu.findItem(R.id.toggleservice);
-        turnOnOff = (Switch) toggleservice.getActionView();
-        turnOnOff.setOnCheckedChangeListener((compoundButton, b) -> {
+        labeledSwitch = (LabeledSwitch) toggleservice.getActionView();
+        labeledSwitch.setOnToggledListener(new OnToggledListener() {
+            @Override
+            public void onSwitched(LabeledSwitch labeledSwitch, boolean isOn) {
+                if (isOn) {
+                    if(isNetworkAvailable())
+                        throwCalls("1");
+                    else Toast.makeText(Root.this, "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
+//                    status.setText("SERVICE ON");
+
+                } else {
+                    if(isNetworkAvailable())
+                        throwCalls("0");
+                    else Toast.makeText(Root.this, "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
+//                    status.setText("SERVICE OFF");
+
+                }
+            }
+        });
+
+   *//*     turnOnOff.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
-                throwCalls("1");
+                if(isNetworkAvailable())
+                    throwCalls("1");
+                else Toast.makeText(this, "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
 //                    status.setText("SERVICE ON");
 
             } else {
-                throwCalls("0");
+                if(isNetworkAvailable())
+                    throwCalls("0");
+                else Toast.makeText(this, "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
 //                    status.setText("SERVICE OFF");
 
             }
-        });
+        });*//*
 //
         return true;
-    }
+    }*/
 
 
     private void throwCalls(String s) {
@@ -203,9 +259,9 @@ public class Root extends AppCompatActivity {
                 if(response.body()!=null){
                     if(response.body().getLoginstatus()!=null){
                         if(response.body().getLoginstatus().equals("1")){
-                            turnOnOff.setChecked(true);
+                            labeledSwitch.setOn(true);
 
-                        }
+                        } else labeledSwitch.setOn(false);
                     }
 
                 }
@@ -225,8 +281,10 @@ public class Root extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        validateStatus();
+        if(isNetworkAvailable()) {
+            validateStatus();
+            getNotificationList("notificationslist");
+        }else Toast.makeText(this, "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -235,10 +293,59 @@ public class Root extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        throwCalls("1");
-        validateStatus();
+        //throwCalls("1");
+        if(isNetworkAvailable()) {
+            validateStatus();
+            getNotificationList("notificationslist");
+
+        } else Toast.makeText(this, "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
     }
 
+
+    private void getNotificationList(String type) {
+
+        FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);
+        Call<NotificationModel> call = foodGenee.getNotifications(type, userId);
+
+        call.enqueue(new Callback<NotificationModel>() {
+            @Override
+            public void onResponse(Call<NotificationModel> call, Response<NotificationModel> response) {
+
+                NotificationModel notificationModel=response.body();
+
+                if(notificationModel!=null){
+                    if(type.equalsIgnoreCase("notificationslist")){
+                        if(notificationModel.getStatus().equalsIgnoreCase("1")){
+                        tv_count.setText(notificationModel.getCount());
+
+
+                        }else{
+                            tv_count.setText("0");
+                        }
+                    }
+
+
+                }else{
+                    tv_count.setText("0");
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<NotificationModel> call, Throwable t) {
+                tv_count.setText("0");
+                Toast.makeText(Root.this, "Some error occured", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -17,7 +17,19 @@ public class Product {
         @Expose
         private String price;
 
-        public String getName() {
+         @SerializedName("order")
+         @Expose
+         private String order;
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public String getName() {
             return name;
         }
 

@@ -1,11 +1,11 @@
 package com.admin.foodgenee.forgotpassword.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.admin.foodgenee.R;
 import com.admin.foodgenee.forgotpassword.model.ForgotPasswordModel;
 
+import androidx.appcompat.app.AppCompatActivity;
 import network.FoodGenee;
 import network.RetrofitClient;
 import retrofit2.Call;
@@ -37,10 +38,17 @@ public class ForgotPassword extends AppCompatActivity {
             loadingDialog.show();
             loadingDialog.setCancelable(false);
             loadingDialog.setCanceledOnTouchOutside(false);
-            sendOtp();
+            if(isNetworkAvailable())sendOtp();
+            else Toast.makeText(this, "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
+
+
         });
     }
-
+    public boolean isNetworkAvailable() {
+ ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+ NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+ return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+ }
     private void sendOtp() {
 
         FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);

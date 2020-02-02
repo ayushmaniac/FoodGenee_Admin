@@ -1,17 +1,16 @@
 package com.admin.foodgenee.fragments.todaysorder;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.admin.foodgenee.R;
 import com.admin.foodgenee.fragments.orders.OrdersModel.OrdersModel;
@@ -19,6 +18,9 @@ import com.admin.foodgenee.fragments.todaysorder.todaysadpater.TodaysAdapter;
 
 import java.util.HashMap;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import network.FoodGenee;
 import network.RetrofitClient;
 import retrofit2.Call;
@@ -52,10 +54,16 @@ public class TodaysOrde extends Fragment {
         progressBar = view.findViewById(R.id.todaysOrderProgress);
         HashMap<String, String> getUrl = sessionManager.getUserDetail();
         userId = getUrl.get(sessionManager.USER_ID);
-
-        setupRecyclerView();
+             if(isNetworkAvailable())
+            setupRecyclerView();
+             else Toast.makeText(getActivity(), "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
         return  view;
     }
+
+    public boolean isNetworkAvailable() {
+ ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+ NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+ return activeNetworkInfo != null && activeNetworkInfo.isConnected(); }
 
     private void setupRecyclerView() {
 

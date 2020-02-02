@@ -2,21 +2,17 @@ package com.admin.foodgenee.fragments.orders.OrdersUI;
 
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,12 +21,16 @@ import com.admin.foodgenee.R;
 import com.admin.foodgenee.fragments.orders.OrdersAdapters.OrdersAdapter;
 import com.admin.foodgenee.fragments.orders.OrdersModel.Order;
 import com.admin.foodgenee.fragments.orders.OrdersModel.OrdersModel;
-import com.admin.foodgenee.orderdetails.ui.OrderDetails;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import network.FoodGenee;
 import network.RetrofitClient;
 import retrofit2.Call;
@@ -54,7 +54,7 @@ public class Orders extends Fragment  {
     TextView dateText, noOrdersDate;
     RecyclerView recyclerView;
     List<Order> list;
-
+    String changeMonth;
 
     public Orders() {
         // Required empty public constructor
@@ -75,6 +75,16 @@ public class Orders extends Fragment  {
         dateText = view.findViewById(R.id.setDateText);
         noOrdersDate = view.findViewById(R.id.noOrdersText);
         selectDate = view.findViewById(R.id.selectDateText);
+
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+        String str = simpleDateFormat.format(new Date());
+        if(isNetworkAvailable())
+        startRecyclerCall(str);
+        else Toast.makeText(getActivity(), "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
+
+
         selectDateButton.setOnClickListener(v -> {
             selectDateFunction();
         });
@@ -86,14 +96,30 @@ public class Orders extends Fragment  {
             month = month + 1;
             Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
 
-            String date = year + "-" + month + "-" + day;
-            startRecyclerCall(date);
-            progressBar.setVisibility(View.VISIBLE);
-            dateText.setVisibility(View.GONE);
-            selectDateButton.setVisibility(View.GONE);
+            if(String.valueOf(month).length()==1){
+                changeMonth="0"+month;
+               // month=Integer.valueOf(str);
+            }else changeMonth=String.valueOf(month);
+
+            String datevalue = year + "-" + changeMonth + "-" + day;
+            Log.e("selected Date",datevalue);
+            if(isNetworkAvailable())
+            startRecyclerCall(datevalue);
+            else Toast.makeText(getActivity(), "Sorry! Not connected to internet", Toast.LENGTH_SHORT).show();
+
+
 
         };
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        /*String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String str = simpleDateFormat.format(new Date());
+        startRecyclerCall(str);*/
     }
 
     private void selectDateFunction() {
@@ -101,6 +127,10 @@ public class Orders extends Fragment  {
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
+        if(String.valueOf(month).length()==1){
+            changeMonth="0"+month;
+            // month=Integer.valueOf(str);
+        }else changeMonth=String.valueOf(month);
 
         DatePickerDialog dialog = new DatePickerDialog(
                 getContext(),
@@ -110,8 +140,17 @@ public class Orders extends Fragment  {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
+    public boolean isNetworkAvailable() {
+ ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+ NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+ return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+ }
 
     private void startRecyclerCall(String date) {
+        Log.e("selected Date",date);
+        progressBar.setVisibility(View.VISIBLE);
+        dateText.setVisibility(View.GONE);
+        selectDateButton.setVisibility(View.GONE);
         FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);
         Call<OrdersModel> call = foodGenee.ordersByDate("orderslist", date,userId );
         call.enqueue(new Callback<OrdersModel>() {
@@ -121,19 +160,28 @@ public class Orders extends Fragment  {
                 try {
                     OrdersModel model = response.body();
                     if(model.getStatus().equals("0")){
-                        progressBar.setVisibility(View.GONE);
                         noOrdersDate.setVisibility(View.VISIBLE);
-
+                        recyclerView.setVisibility(View.GONE);
+                        noOrdersDate.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
 
                     }
                     else if(model.getStatus().equals("1")){
 
                         progressBar.setVisibility(View.GONE);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        OrdersAdapter ordersAdapter = new OrdersAdapter(model.getOrders(), getContext());
-                        recyclerView.setAdapter(ordersAdapter);
-                        noOrdersDate.setVisibility(View.GONE);
-                        selectDateButton.setVisibility(View.GONE);
+                        if(model.getOrders().size()>0){
+                            recyclerView.setVisibility(View.VISIBLE);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                            OrdersAdapter ordersAdapter = new OrdersAdapter(model.getOrders(), getContext());
+                            recyclerView.setAdapter(ordersAdapter);
+                            noOrdersDate.setVisibility(View.GONE);
+                            selectDateButton.setVisibility(View.GONE);
+
+                        }else{
+                            noOrdersDate.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }
+
 
 
                     }
@@ -143,7 +191,10 @@ public class Orders extends Fragment  {
                 catch (Exception e){
 
                     progressBar.setVisibility(View.GONE);
-                    selectDateButton.setVisibility(View.VISIBLE);
+                    noOrdersDate.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+
+                    //selectDateButton.setVisibility(View.VISIBLE);
 
                 }
             }
@@ -152,7 +203,9 @@ public class Orders extends Fragment  {
             public void onFailure(Call<OrdersModel> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
-                selectDateButton.setVisibility(View.VISIBLE);
+                noOrdersDate.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                //selectDateButton.setVisibility(View.VISIBLE);
 
 
             }

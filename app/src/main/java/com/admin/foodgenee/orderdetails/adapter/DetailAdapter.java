@@ -1,18 +1,17 @@
 package com.admin.foodgenee.orderdetails.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.admin.foodgenee.R;
 import com.admin.foodgenee.orderdetails.model.Product;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailViewHolder> {
 
@@ -34,9 +33,9 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
     @Override
     public void onBindViewHolder(@NonNull DetailViewHolder holder, int position) {
 
-        holder.productPrice.setText("Rs. " + list.get(position).getPrice());
-        holder.productCount.setText("X "+list.get(position).getCount());
-        holder.productName.setText(list.get(position).getName());
+        holder.productPrice.setText("₹ " + list.get(position).getPrice());
+        holder.productCount.setText("  X  "+list.get(position).getCount());
+        holder.productName.setText(list.get(position).getOrder()+"    "+list.get(position).getName());
     }
 
     @Override

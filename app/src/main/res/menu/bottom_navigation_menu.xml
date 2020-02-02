@@ -6,10 +6,10 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="Dashboard" />
 
-    <item
+    <!--<item
         android:id="@+id/navigation_todaysorder"
         android:icon="@drawable/ic_shopping_cart_black_24dp"
-        android:title="Todays Order" />
+        android:title="Todays Order" />-->
 
     <item
         android:id="@+id/navigation_orders"
