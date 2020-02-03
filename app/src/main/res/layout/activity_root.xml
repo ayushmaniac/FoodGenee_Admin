@@ -22,7 +22,7 @@
                 android:layout_weight="0.8"
                 android:layout_centerInParent="true"
                 android:gravity="left|center"
-                android:text="FoodQ Polite"
+                android:text="FoodQ Pilot"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp"
                />

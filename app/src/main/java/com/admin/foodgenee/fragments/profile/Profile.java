@@ -61,7 +61,6 @@ import androidx.fragment.app.Fragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 import network.FoodGenee;
 import network.RetrofitClient;
-import okhttp3.ResponseBody;
 import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -155,18 +154,18 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
                                     });
 
                             FoodGenee foodGenee = RetrofitClient.getApiClient().create(FoodGenee.class);
-                            Call<ResponseBody> call = foodGenee.sendStatus("login-status", userId,"0", firebaseToken);
+                            Call<UserModel> call = foodGenee.getUserDetails("logout", userId);
 
-                            call.enqueue(new Callback<ResponseBody>() {
+                            call.enqueue(new Callback<UserModel>() {
                                 @Override
-                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                public void onResponse(Call<UserModel> call, Response<UserModel> response) {
 
                                     sessionManager.logout();
                                     dialog.dismiss();
                                 }
 
                                 @Override
-                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                public void onFailure(Call<UserModel> call, Throwable t) {
 
                                     Toast.makeText(getActivity(), "Some error occured", Toast.LENGTH_SHORT).show();
 
@@ -517,7 +516,7 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
 
 
             try {
-                new MultipartUploadRequest(getActivity(), "http://sansdigitals.com/phpdemos/foodgenee/api/serviceboy/boy-profilepic.php")
+                new MultipartUploadRequest(getActivity(), RetrofitClient.BASE_URL+"serviceboy/boy-profilepic.php")
                         .setMethod("POST")
                         .addFileToUpload(path, "profilepic")
                         .addParameter("userid",userId)

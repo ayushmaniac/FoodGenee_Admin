@@ -17,6 +17,7 @@ import com.admin.foodgenee.orderdetails.adapter.DetailAdapter;
 import com.admin.foodgenee.orderdetails.model.OrderDetailsModel;
 import com.bumptech.glide.Glide;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -149,7 +150,8 @@ public class OrderDetails extends AppCompatActivity {
                                     retrivedData.getOrders().getPendingamount().equalsIgnoreCase("")) {
                                 mLLPending.setVisibility(View.GONE);
                             }else{  mLLPending.setVisibility(View.VISIBLE);
-                                mTvPending.setText("₹ "+retrivedData.getOrders().getPendingamount());}
+                                mTvPending.setText("₹ "+ new DecimalFormat("##.##").format(Double.valueOf(retrivedData.getOrders().getPendingamount()))
+                                );}
                         }else mLLPending.setVisibility(View.GONE);
 
 

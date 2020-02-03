@@ -82,6 +82,7 @@ dependencies {
     //file upload
     implementation 'net.gotev:uploadservice:3.2'
 
+    implementation 'com.github.angads25:toggle:1.0.0'
 
 
 }
