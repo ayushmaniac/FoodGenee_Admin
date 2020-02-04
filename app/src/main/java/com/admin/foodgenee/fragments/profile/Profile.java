@@ -604,7 +604,55 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
                 }
                 else if (options[item].equals("Choose from Gallery"))
                 {
-                    selectPicture();
+                    if(ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.CAMERA)
+                            + ContextCompat.checkSelfPermission(
+                            getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)
+                            + ContextCompat.checkSelfPermission(
+                            getActivity(),Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED){
+                        if(ActivityCompat.shouldShowRequestPermissionRationale(
+                                getActivity(),Manifest.permission.CAMERA)
+                                || ActivityCompat.shouldShowRequestPermissionRationale(
+                                getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)
+                                || ActivityCompat.shouldShowRequestPermissionRationale(
+                                getActivity(),Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setMessage("Camera, Read Contacts and Write External" +
+                                    " Storage permissions are required to do the task.");
+                            builder.setTitle("Please grant those permissions");
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    ActivityCompat.requestPermissions(
+                                            getActivity(),
+                                            new String[]{
+                                                    Manifest.permission.CAMERA,
+                                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                            },
+                                            124
+                                    );
+                                }
+                            });
+                            builder.setNeutralButton("Cancel",null);
+                            AlertDialog dialog1 = builder.create();
+                            dialog1.show();
+                        }else{
+                            ActivityCompat.requestPermissions(
+                                    getActivity(),
+                                    new String[]{
+                                            Manifest.permission.CAMERA,
+                                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                    },
+                                    124
+                            );
+                        }
+                    }else {
+                        selectPicture();
+                    }
+
+
                 }
                 else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
@@ -681,8 +729,7 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode){
             case PERMISSIONS_MULTIPLE_REQUEST:{
-                if(
-                        (grantResults.length >0) &&
+                if((grantResults.length >0) &&
                                 (grantResults[0]
                                         + grantResults[1]
                                         + grantResults[2]
@@ -694,6 +741,22 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
                     imageUri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                     startActivityForResult(intent, REQUEST_CAMERA_CODE);
+
+                }else {
+                    // Permissions are denied
+                    Toast.makeText(getActivity(),"Permissions denied.",Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            case 124:{
+                if((grantResults.length >0) &&
+                        (grantResults[0]
+                                + grantResults[1]
+                                + grantResults[2]
+                                == PackageManager.PERMISSION_GRANTED)){
+                    Intent openGalleryIntent = new Intent(Intent.ACTION_PICK);
+                    openGalleryIntent.setType("image/*");
+                    startActivityForResult(openGalleryIntent, REQUEST_GALLERY_CODE);
 
                 }else {
                     // Permissions are denied
