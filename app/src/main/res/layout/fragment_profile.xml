@@ -263,9 +263,18 @@
             android:text="Update Password"
             android:textStyle="bold"
             android:layout_marginLeft="10dp" />
-
         <EditText
             android:layout_below="@id/updatePasswordText"
+            android:layout_margin="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="300dp"
+            android:inputType="text"
+            android:id="@+id/oldPassword"
+            android:layout_height="wrap_content"
+            android:hint="Old Password"/>
+
+        <EditText
+            android:layout_below="@id/oldPassword"
             android:layout_margin="10dp"
             android:layout_centerHorizontal="true"
             android:layout_width="300dp"
@@ -281,7 +290,7 @@
             android:layout_centerHorizontal="true"
             android:layout_width="300dp"
             android:id="@+id/confirmPassword"
-            android:inputType="textPassword"
+            android:inputType="text"
             android:layout_height="wrap_content"
             android:hint="Confirm Password"/>
 

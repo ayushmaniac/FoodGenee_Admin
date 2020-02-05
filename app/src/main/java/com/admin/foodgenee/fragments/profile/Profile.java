@@ -81,7 +81,7 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
     CardView hiddenLayout;
     Button submitChangeDetails, submitNewPassword;
     Dialog loadingDialog;
-    EditText newPassword, conFirmPassword;
+    EditText newPassword, conFirmPassword,oldPassword;
     Uri imageUri;
     String firebaseToken;
     private static final  int PERMISSIONS_MULTIPLE_REQUEST = 123;
@@ -257,62 +257,68 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
         String uPassword = newPassword.getText().toString();
         String nuPassword = conFirmPassword.getText().toString();
 
-        if(uPassword.equals(nuPassword)){
+        if(uPassword.equalsIgnoreCase("")||nuPassword.equalsIgnoreCase("")||oldPassword.getText().toString().equalsIgnoreCase("")){
+            Toast.makeText(getContext(), "please enter details", Toast.LENGTH_SHORT).show();
 
-        Call<ChangePasswordModel> httpCall = foodGenee.changePassword("changepassword",userId,uPassword);
-        httpCall.enqueue(new Callback<ChangePasswordModel>() {
-            @Override
-            public void onResponse(Call<ChangePasswordModel> call, Response<ChangePasswordModel> response) {
+        }else{
+            if(uPassword.equals(nuPassword)){
 
-                try{
+                Call<ChangePasswordModel> httpCall = foodGenee.update("updatepassword",userId,uPassword,oldPassword.getText().toString());
+                httpCall.enqueue(new Callback<ChangePasswordModel>() {
+                    @Override
+                    public void onResponse(Call<ChangePasswordModel> call, Response<ChangePasswordModel> response) {
 
-                    if(response.body().getStatus().equals("0")){
-                        Toast.makeText(getContext(), response.body().getText(), Toast.LENGTH_SHORT).show();
+                        try{
 
+                            if(response.body().getStatus().equals("0")){
+                                Toast.makeText(getContext(), response.body().getText(), Toast.LENGTH_SHORT).show();
+
+                                loadingDialog.cancel();
+                                loadingDialog.dismiss();
+                                hiddenLayout.setVisibility(View.GONE);
+
+                            }
+                            else if(response.body().getStatus().equals("1")){
+
+                                Toast.makeText(getContext(), response.body().getText(), Toast.LENGTH_SHORT).show();
+                                loadingDialog.cancel();
+                                loadingDialog.dismiss();
+                                hiddenLayout.setVisibility(View.GONE);
+
+
+                            }
+
+                        }
+                        catch (Exception e){
+
+                            loadingDialog.cancel();
+                            loadingDialog.dismiss();
+                            hiddenLayout.setVisibility(View.GONE);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ChangePasswordModel> call, Throwable t) {
                         loadingDialog.cancel();
                         loadingDialog.dismiss();
                         hiddenLayout.setVisibility(View.GONE);
 
-                    }
-                    else if(response.body().getStatus().equals("1")){
-
-                        Toast.makeText(getContext(), response.body().getText(), Toast.LENGTH_SHORT).show();
-                        loadingDialog.cancel();
-                        loadingDialog.dismiss();
-                        hiddenLayout.setVisibility(View.GONE);
-
 
                     }
+                });
 
-                }
-                catch (Exception e){
-
-                    loadingDialog.cancel();
-                    loadingDialog.dismiss();
-                    hiddenLayout.setVisibility(View.GONE);
-
-                }
 
             }
+            else {
 
-            @Override
-            public void onFailure(Call<ChangePasswordModel> call, Throwable t) {
+                Toast.makeText(getContext(), "Password not same, Please write same password and confirm it", Toast.LENGTH_SHORT).show();
                 loadingDialog.cancel();
                 loadingDialog.dismiss();
-                hiddenLayout.setVisibility(View.GONE);
-
-
             }
-        });
-
-
         }
-        else {
 
-            Toast.makeText(getContext(), "Password not same, Please write same password and confirm it", Toast.LENGTH_SHORT).show();
-            loadingDialog.cancel();
-            loadingDialog.dismiss();
-        }
 
     }
 
@@ -386,6 +392,7 @@ public class Profile extends Fragment implements Root.ActivityResultListener {
         hiddenLayout = view.findViewById(R.id.cardTwo);
         newPassword = view.findViewById(R.id.updatePassword);
         conFirmPassword = view.findViewById(R.id.confirmPassword);
+        oldPassword=view.findViewById(R.id.oldPassword);
 
     }
 

@@ -135,6 +135,17 @@ public interface FoodGenee {
 
     );
 
+    @FormUrlEncoded
+    @POST("serviceboy/boy-registration.php")
+    Call<ChangePasswordModel> update(
+            @Field("action") String action,
+            @Field("usersid") String usersid,
+            @Field("password") String password,
+            @Field("oldpassword") String oldpassword
+
+
+    );
+
     @Multipart
     @POST("serviceboy/boy-registration.php")
     Call<ResponseBody> updatePic(
